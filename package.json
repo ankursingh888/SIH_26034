@@ -1,0 +1,23 @@
+{
+  "name": "legal-metrology-simpler",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js",
+    "build:css": "tailwindcss -i ./tailwind.input.css -o ./styles.css --minify",
+    "clear:photos": "rimraf backend/photos/*"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "multer": "^2.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.13",
+    "rimraf": "^6.1.3",
+    "tailwindcss": "^4.1.13"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "step_1_product_identification": {
+    "product_type": "Pharmaceuticals & Supplements",
+    "confidence": "High",
+    "reasoning": "The product is a protein supplement, as evidenced by terms like 'Soy Protein Isolate', 'Nutritional Information', 'Amino Acid Profile', and 'BCAA & EAA'."
+  },
+  "step_2_structured_info": {
+    "basic_info": {
+      "brand_or_manufacturer_brand": "NAKPRO",
+      "product_name": "SOY PROTEIN ISOLATE",
+      "variant_flavour_or_model": "Chocolate",
+      "net_quantity_or_weight": "1kg",
+      "mrp_or_price": "2050/-",
+      "country_of_origin": "India"
+    },
+    "manufacturing_and_tracking": {
+      "manufacturer_name_and_address": "Nakoda Dairy Pvt. Ltd., Nakpro Nutrition, No. 187, Bommasandra Industrial Area, Attibele Hobli, Anekal Taluk, Bangalore-560099",
+      "batch_or_lot_number": "SPCH1607B",
+      "manufacture_date": "16.07.26",
+      "expiry_or_best_before_date": "16.01.28",
+      "licensing_or_barcodes": [
+        "FSSAI Lic. No. 10015043001318"
+      ]
+    },
+    "category_specific_details": {
+      "ingredients_list": [
+        "Instantized Soy Protein Isolate",
+        "Cocoa Powder",
+        "Nature Identical Flavours",
+        "Sodium Chloride",
+        "Sucralose (INS955)"
+      ],
+      "nutritional_information": {
+        "serving_size": "1 Heaping Scoop (33g)",
+        "servings_per_pack": "30",
+        "energy_per_100g": "392.00 kcal",
+        "protein_per_100g": "90.00 g (dry basis)",
+        "total_carbohydrate_per_100g": "1.00 g",
+        "total_fat_per_100g": "3.10 g"
+      },
+      "allergen_warnings": "Contains Milk & Soy. Manufactured in a facility that processes Milk & Soy.",
+      "dietary_claims": [
+        "Vegan Product",
+        "No Added Sugar",
+        "No Fillers",
+        "No Banned Substances",
+        "Highest BCAA & EAA",
+        "No Amino Spiking"
+      ]
+    },
+    "usage_and_storage": {
+      "directions_for_use": "Add one heaping scoop (33g) of the powder to a shaker having 300ml of water / Fruit Juice / any other beverage of your choice, then shake for about 30 seconds or until the powder is completely dissolved and your drink is ready.",
+      "storage_instructions": "Store in a cool, dry place and keep out of reach of children."
+    },
+    "warnings_and_precautions": "Pregnant women and people with any medical conditions should consult the doctor before consuming this product. Not to exceed the recommended daily usage.",
+    "low_confidence_or_garbled_fields": []
+  },
+  "step_3_metrology_essentials_audit": {
+    "rule_1_manufacturer_packer_importer_details": {
+      "declared_text": "Nakoda Dairy Pvt. Ltd., Nakpro Nutrition, No. 187, Bommasandra Industrial Area, Attibele Hobli, Anekal Taluk, Bangalore-560099",
+      "compliance_confidence": "High"
+    },
+    "rule_2_role_classification_labeling": {
+      "declared_role_prefix": "Manufactured by:",
+      "compliance_confidence": "High"
+    },
+    "rule_3_generic_or_common_name": {
+      "declared_text": "SOY PROTEIN ISOLATE",
+      "compliance_confidence": "High"
+    },
+    "rule_4_net_quantity_declaration": {
+      "declared_text": "1kg",
+      "compliance_confidence": "High"
+    },
+    "rule_5_mrp_and_tax_inclusivity": {
+      "declared_text": "2050/- (Inclusive of All Taxes)",
+      "has_inclusive_of_taxes_statement": true,
+      "compliance_confidence": "High"
+    },
+    "rule_6_month_and_year_of_manufacture_or_pack": {
+      "declared_text": "16.07.26",
+      "compliance_confidence": "High"
+    },
+    "rule_7_consumer_care_details": {
+      "declared_name": "NAKPRO NUTRITION (A Division of NDPL)",
+      "declared_address": "No. 187, Bommasandra Industrial Area, Attibele Hobli, Anekal Taluk, Bangalore-560099",
+      "declared_phone": "+91 9739093932",
+      "declared_email": "crm@nakpro.com",
+      "compliance_confidence": "High"
+    },
+    "rule_8_unit_sale_price_usp": {
+      "declared_text": "(2.05/gm)",
+      "compliance_confidence": "High"
+    },
+    "rule_9_core_statutory_obligation": {
+      "all_primary_declarations_present": true,
+      "compliance_confidence": "High"
+    },
+    "rule_10_country_of_origin_and_digital_disclosure": {
+      "declared_country_of_origin": "",
+      "barcode_or_qr_disclosed": false,
+      "compliance_confidence": "Medium"
+    }
+  }
+}

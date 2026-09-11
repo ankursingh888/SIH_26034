@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #0f2a54;
+  --color-navy-deep: #0a1f42;
+  --color-success: #15803d;
+  --color-warning: #b45309;
+  --color-danger: #dc2626;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
