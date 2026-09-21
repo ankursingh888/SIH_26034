@@ -1,124 +1,104 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rule Repository - Legal Metrology</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['"Plus Jakarta Sans"', "sans-serif"],
-              mono: ['"JetBrains Mono"', "monospace"],
-            },
-            colors: { navy: "#0f2a54", success: "#15803d", warning: "#b45309" },
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rule Repository - Legal Metrology</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', "sans-serif"],
+            mono: ['"JetBrains Mono"', "monospace"],
           },
+          colors: { navy: "#0f2a54", success: "#15803d", warning: "#b45309" },
         },
-      };
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body class="min-h-screen bg-slate-100 font-sans text-slate-900">
-    <header class="bg-navy text-white">
-      <div class="mx-auto flex max-w-5xl flex-col gap-6 px-5 py-8 md:px-8">
-        <div class="flex items-center gap-4">
-          <div class="text-2xl">⚖️</div>
-          <div>
-            <h1 class="text-2xl font-extrabold md:text-3xl">
-              Legal Metrology Compliance Platform
-            </h1>
-            <p class="mt-1 text-sm text-white/70">
-              SIH26034 · Department of Consumer Affairs
-            </p>
-          </div>
-        </div>
-        <nav class="flex flex-wrap gap-1.5">
-          <a
-            href="/"
-            data-nav
-            class="rounded-lg px-4 py-2.5 text-sm font-semibold text-white/80"
-            >New Inspection</a
-          ><a
-            href="/repository"
-            data-nav
-            class="rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-navy"
-            >Rule Repository</a
-          ><a
-            href="/report"
-            data-nav
-            class="rounded-lg px-4 py-2.5 text-sm font-semibold text-white/80"
-            >View Reports</a
-          >
-        </nav>
-      </div>
-    </header>
-    <main class="mx-auto max-w-5xl px-5 py-8 md:px-8">
-      <div
-        class="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"
-      >
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body class="min-h-screen bg-slate-100 font-sans text-slate-900">
+  <header class="bg-navy text-white">
+    <div class="mx-auto flex max-w-5xl flex-col gap-6 px-5 py-8 md:px-8">
+      <div class="flex items-center gap-4">
+        <div class="text-2xl">⚖️</div>
         <div>
-          <h2 class="text-xl font-bold">
-            Version-Controlled Rule Engine Database
-          </h2>
-          <p class="mt-1 max-w-2xl text-sm text-slate-500">
-            Machine-readable rules, exceptions, and amendments used to
-            automatically evaluate AI-extracted declarations.
+          <h1 class="text-2xl font-extrabold md:text-3xl">
+            Legal Metrology Compliance Platform
+          </h1>
+          <p class="mt-1 text-sm text-white/70">
+            SIH26034 · Department of Consumer Affairs
           </p>
         </div>
-        <input
-          id="search"
-          type="search"
-          placeholder="Search rules…"
-          class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm sm:w-64"
-        />
       </div>
-      <div class="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <p class="font-mono text-2xl font-bold text-navy">3</p>
-          <p class="text-xs text-slate-500">Active Rules</p>
-        </div>
-        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <p class="font-mono text-2xl font-bold text-success">100%</p>
-          <p class="text-xs text-slate-500">Machine-Readable</p>
-        </div>
-        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <p class="font-mono text-2xl font-bold text-warning">2026</p>
-          <p class="text-xs text-slate-500">Latest Amendment</p>
-        </div>
-        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <p class="font-mono text-2xl font-bold text-navy">v3.2</p>
-          <p class="text-xs text-slate-500">Engine Version</p>
-        </div>
+      <nav class="flex flex-wrap gap-1.5">
+        <a href="/" data-nav class="rounded-lg px-4 py-2.5 text-sm font-semibold text-white/80">New Inspection</a><a
+          href="/repository" data-nav class="rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-navy">Rule
+          Repository</a><a href="/report" data-nav
+          class="rounded-lg px-4 py-2.5 text-sm font-semibold text-white/80">View Reports</a>
+      </nav>
+    </div>
+  </header>
+  <main class="mx-auto max-w-5xl px-5 py-8 md:px-8">
+    <div class="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+      <div>
+        <h2 class="text-xl font-bold">
+          Version-Controlled Rule Engine Database
+        </h2>
+        <p class="mt-1 max-w-2xl text-sm text-slate-500">
+          Machine-readable rules, exceptions, and amendments used to
+          automatically evaluate AI-extracted declarations.
+        </p>
       </div>
-      <div
-        class="hidden overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm md:block"
-      >
-        <table class="w-full text-left">
-          <thead>
-            <tr
-              class="bg-slate-100 text-xs font-semibold uppercase text-slate-500"
-            >
-              <th class="px-4 py-3">Rule ID</th>
-              <th class="px-4 py-3">Declaration Required</th>
-              <th class="px-4 py-3">Condition / Applicability</th>
-              <th class="px-4 py-3">Latest Amendment</th>
-              <th class="px-4 py-3">Status</th>
-            </tr>
-          </thead>
-          <tbody id="rows" class="divide-y divide-slate-200 text-sm"></tbody>
-        </table>
+      <input id="search" type="search" placeholder="Search rules…"
+        class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm sm:w-64" />
+    </div>
+    <div class="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <p class="font-mono text-2xl font-bold text-navy">3</p>
+        <p class="text-xs text-slate-500">Active Rules</p>
       </div>
-      <div id="cards" class="grid gap-3 md:hidden"></div>
-      <p id="empty" class="hidden py-10 text-center text-sm text-slate-400">
-        No rules match your search.
-      </p>
-    </main>
-    <script src="/app.js"></script>
-  </body>
+      <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <p class="font-mono text-2xl font-bold text-success">100%</p>
+        <p class="text-xs text-slate-500">Machine-Readable</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <p class="font-mono text-2xl font-bold text-warning">2026</p>
+        <p class="text-xs text-slate-500">Latest Amendment</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <p class="font-mono text-2xl font-bold text-navy">v3.2</p>
+        <p class="text-xs text-slate-500">Engine Version</p>
+      </div>
+    </div>
+    <div class="hidden overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm md:block">
+      <table class="w-full text-left">
+        <thead>
+          <tr class="bg-slate-100 text-xs font-semibold uppercase text-slate-500">
+            <th class="px-4 py-3">Rule ID</th>
+            <th class="px-4 py-3">Declaration Required</th>
+            <th class="px-4 py-3">Condition / Applicability</th>
+            <th class="px-4 py-3">Latest Amendment</th>
+            <th class="px-4 py-3">Status</th>
+          </tr>
+        </thead>
+        <tbody id="rows" class="divide-y divide-slate-200 text-sm"></tbody>
+      </table>
+    </div>
+    <div id="cards" class="grid gap-3 md:hidden"></div>
+    <p id="empty" class="hidden py-10 text-center text-sm text-slate-400">
+      No rules match your search.
+    </p>
+  </main>
+  <script src="/app.js"></script>
+</body>
+
 </html>

@@ -20,8 +20,7 @@ import requests
 from PIL import Image
 
 # Gemini API Configuration
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyB1knI-KMQdmkEiTM3gR0SipyUNuJKYZNg")
-
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 # Standard multimodal-capable Gemini models
 CANDIDATE_MODELS = [
     "gemini-3.1-pro-preview",

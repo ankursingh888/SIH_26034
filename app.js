@@ -77,6 +77,15 @@ function formatValue(value) {
   return String(value).trim();
 }
 
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
 /**
  * Maps compliance confidence rating ("High", "Medium"/"Mid", "Low") to a percentage score:
  *  - "High"   → 96%
@@ -376,6 +385,58 @@ function initRepository() {
   renderRules(RULES);
 }
 
+async function initReport() {
+  const reportName = document.getElementById('report-product-name');
+  if (!reportName) return;
+
+  const reportId = new URLSearchParams(window.location.search).get('reportId');
+  const listResponse = await fetch('/api/inspections');
+  const listPayload = await listResponse.json();
+  if (!listResponse.ok || !listPayload.inspections?.length) {
+    throw new Error(listPayload.error || 'No saved inspections were found.');
+  }
+
+  const selectedId = reportId || listPayload.inspections[0].report_id;
+  const response = await fetch(`/api/inspections/${encodeURIComponent(selectedId)}`);
+  const payload = await response.json();
+  if (!response.ok) throw new Error(payload.error || 'Could not load inspection.');
+
+  const inspection = payload.inspection;
+  const analysis = inspection.analysis || {};
+  const basicInfo = analysis.step_2_structured_info?.basic_info || {};
+  const audit = analysis.step_3_metrology_essentials_audit || {};
+  const status = inspection.status || 'review';
+  const statusLabel = status.replace('-', ' ').toUpperCase();
+  const statusClass = status === 'compliant'
+    ? 'border-success/30 bg-success/10 text-success'
+    : status === 'non-compliant'
+      ? 'border-danger/30 bg-danger/10 text-danger'
+      : 'border-warning/30 bg-warning/10 text-warning';
+
+  document.getElementById('report-id').textContent = inspection.report_id;
+  document.getElementById('report-footer-id').textContent = inspection.report_id;
+  document.getElementById('report-date').textContent = new Date(inspection.created_at).toLocaleString();
+  reportName.textContent = basicInfo.product_name || inspection.product_name || 'Unnamed product';
+  document.getElementById('report-status').className = `rounded-full border px-3 py-1.5 text-sm font-bold ${statusClass}`;
+  document.getElementById('report-status').textContent = `● ${statusLabel}`;
+  document.querySelector('#report-product-details dd').textContent = basicInfo.product_name || 'Not detected';
+  document.querySelector('#report-source-details dd').textContent = `Physical package scan (${inspection.uploaded_files?.length || 0} images)`;
+
+  const ruleEntries = Object.entries(audit);
+  document.getElementById('report-findings').innerHTML = ruleEntries.length
+    ? ruleEntries.map(([ruleName, rule]) => {
+      const values = Object.entries(rule || {})
+        .filter(([, value]) => value !== '' && value !== null && value !== undefined)
+        .map(([key, value]) => `<div><b>${escapeHtml(key.replaceAll('_', ' '))}:</b> ${escapeHtml(formatValue(value))}</div>`)
+        .join('');
+      return `<div class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+        <h4 class="font-bold text-slate-800">${escapeHtml(ruleName.replaceAll('_', ' '))}</h4>
+        <div class="mt-2 space-y-1">${values || 'No declaration detected.'}</div>
+      </div>`;
+    }).join('')
+    : '<p class="text-sm text-slate-500">No audit findings were returned.</p>';
+}
+
 
 // =============================================================================
 // BOOT
@@ -384,3 +445,10 @@ function initRepository() {
 setActiveNav();
 initInspection();
 initRepository();
+initReport().catch(error => {
+  const reportName = document.getElementById('report-product-name');
+  if (reportName) {
+    reportName.textContent = 'Inspection unavailable';
+    document.getElementById('report-findings').innerHTML = `<p class="rounded-xl border border-danger/30 bg-danger/10 p-4 text-sm text-danger">${escapeHtml(error.message)}</p>`;
+  }
+});
