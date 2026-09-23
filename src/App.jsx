@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const STATS = {
   totalInspections: '1,284',
@@ -394,7 +394,7 @@ function Dashboard({ onNavigate }) {
   );
 }
 
-function Repository() {
+function Repository({ onNavigate }) {
   const [query, setQuery] = useState('');
   const filteredRules = useMemo(
     () =>
@@ -424,7 +424,7 @@ function Repository() {
               <button
                 key={href}
                 type="button"
-                onClick={() => window.location.hash = href}
+                onClick={() => onNavigate(href)}
                 className={`rounded-lg px-4 py-2.5 text-sm font-semibold ${
                   href === '/repository' ? 'bg-white text-[#0f2a54]' : 'text-white/80'
                 }`}
@@ -516,7 +516,7 @@ function Repository() {
   );
 }
 
-function Report() {
+function Report({ onNavigate }) {
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 print:bg-white">
       <header className="print-hidden bg-[#0f2a54] text-white">
@@ -537,7 +537,7 @@ function Report() {
               <button
                 key={href}
                 type="button"
-                onClick={() => window.location.hash = href}
+                onClick={() => onNavigate(href)}
                 className={`rounded-lg px-4 py-2.5 text-sm font-semibold ${
                   href === '/report' ? 'bg-white text-[#0f2a54]' : 'text-white/80'
                 }`}
@@ -551,7 +551,7 @@ function Report() {
 
       <main className="mx-auto max-w-4xl px-5 py-8 md:px-8">
         <div className="print-hidden mb-5 flex justify-between">
-          <button type="button" onClick={() => window.location.hash = '/'} className="font-semibold text-[#0f2a54]">← Back to inspections</button>
+          <button type="button" onClick={() => onNavigate('/')} className="font-semibold text-[#0f2a54]">← Back to inspections</button>
           <button type="button" onClick={() => window.print()} className="rounded-xl bg-[#0f2a54] px-4 py-2.5 text-sm font-semibold text-white">
             🖨️ Print / Save as PDF
           </button>
@@ -646,6 +646,12 @@ function App() {
 
   const [route, setRoute] = useState(getPathRoute());
 
+  useEffect(() => {
+    const handlePopState = () => setRoute(getPathRoute());
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   const onNavigate = (nextRoute) => {
     const normalized = nextRoute === '/' ? '/' : nextRoute;
     window.history.pushState({}, '', normalized);
@@ -656,9 +662,9 @@ function App() {
 
   switch (currentRoute) {
     case 'repository':
-      return <Repository />;
+      return <Repository onNavigate={onNavigate} />;
     case 'report':
-      return <Report />;
+      return <Report onNavigate={onNavigate} />;
     default:
       return <Dashboard onNavigate={onNavigate} />;
   }
