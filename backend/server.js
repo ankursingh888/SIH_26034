@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import fs from 'node:fs/promises';
 import multer from 'multer';
@@ -14,7 +15,8 @@ const port = process.env.PORT || 3001;
 const photosDir = path.join(__dirname, 'photos');
 const outputFile = path.join(__dirname, 'structured_output.json');
 const distDir = path.join(projectRoot, 'dist');
-const pythonCommand = process.platform === 'win32'
+const configuredPython = process.env.PYTHON_BIN;
+const bundledPython = process.platform === 'win32'
   ? path.join(__dirname, 'final_env', 'Scripts', 'python.exe')
   : path.join(__dirname, 'final_env', 'bin', 'python');
 
@@ -31,6 +33,29 @@ const upload = multer({
   }
 });
 
+await fs.mkdir(photosDir, { recursive: true });
+
+async function resolvePythonCommand() {
+  const candidates = configuredPython
+    ? [configuredPython]
+    : [bundledPython, process.platform === 'win32' ? 'python' : 'python3', 'python'];
+
+  for (const candidate of candidates) {
+    if (!path.isAbsolute(candidate)) return candidate;
+
+    try {
+      await fs.access(candidate);
+      return candidate;
+    } catch {
+      // Try the next configured runtime.
+    }
+  }
+
+  throw new Error(
+    'Python runtime not found. Install Python or set PYTHON_BIN to its executable path.',
+  );
+}
+
 async function hasBuiltAssets() {
   try {
     await fs.access(distDir);
@@ -41,15 +66,19 @@ async function hasBuiltAssets() {
 }
 
 function runAnalyzer() {
-  return new Promise((resolve, reject) => {
-    const python = spawn(pythonCommand, ['final.py'], { cwd: __dirname });
-    let errorOutput = '';
+  return resolvePythonCommand().then((pythonCommand) => new Promise((resolve, reject) => {
+    const python = spawn(pythonCommand, ['final.py'], {
+      cwd: __dirname,
+      env: process.env,
+    });
+    let output = '';
 
-    python.stderr.on('data', chunk => { errorOutput += chunk.toString(); });
+    python.stdout.on('data', chunk => { output += chunk.toString(); });
+    python.stderr.on('data', chunk => { output += chunk.toString(); });
     python.on('error', error => reject(new Error(`Could not start Python analyzer: ${error.message}`)));
     python.on('close', async code => {
       if (code !== 0) {
-        reject(new Error(errorOutput.trim() || `Python analyzer exited with code ${code}`));
+        reject(new Error(output.trim() || `Python analyzer exited with code ${code}`));
         return;
       }
 
@@ -60,7 +89,7 @@ function runAnalyzer() {
         reject(new Error(`Analyzer output could not be read: ${error.message}`));
       }
     });
-  });
+  }));
 }
 
 app.use(express.urlencoded({ extended: true }));
@@ -99,21 +128,46 @@ app.post('/submit-inspection', (req, res) => {
   res.json({ ok: true, decision: req.body.decision || null });
 });
 
-app.post('/upload-photos', upload.array('photos', 10), async (req, res) => {
-  if (!req.files?.length) {
-    return res.status(400).json({ ok: false, error: 'At least one image is required.' });
-  }
+app.post('/upload-photos', (req, res, next) => {
+  upload.array('photos', 10)(req, res, async (uploadError) => {
+    if (uploadError) {
+      if (uploadError instanceof multer.MulterError && uploadError.code === 'LIMIT_FILE_SIZE') {
+        return res.status(413).json({ ok: false, error: 'Each image must be 10 MB or smaller.' });
+      }
+      if (uploadError instanceof multer.MulterError && uploadError.code === 'LIMIT_FILE_COUNT') {
+        return res.status(413).json({ ok: false, error: 'Upload no more than 10 images at a time.' });
+      }
+      if (uploadError.message === 'Unexpected field') {
+        return res.status(400).json({ ok: false, error: 'Use the photos upload field for image files.' });
+      }
+      return next(uploadError);
+    }
 
-  try {
-    const analysis = await runAnalyzer();
+    if (!req.files?.length) {
+      return res.status(400).json({ ok: false, error: 'At least one image is required.' });
+    }
 
-    await Promise.all(req.files.map(file => fs.unlink(file.path).catch(() => { })));
+    try {
+      const analysis = await runAnalyzer();
+      res.json({ ok: true, files: req.files.map(file => file.filename), analysis });
+    } catch (error) {
+      console.error(error);
+      const status = error.message.includes('GEMINI_API_KEY')
+        || error.message.includes('Python runtime')
+        || error.message.includes('ModuleNotFoundError')
+        ? 503
+        : 500;
+      res.status(status).json({ ok: false, error: error.message });
+    } finally {
+      await Promise.all(req.files.map(file => fs.unlink(file.path).catch(() => { })));
+    }
+  });
+});
 
-    res.json({ ok: true, files: req.files.map(file => file.filename), analysis });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ ok: false, error: error.message });
-  }
+app.use((error, _req, res, next) => {
+  if (res.headersSent) return next(error);
+  console.error(error);
+  res.status(500).json({ ok: false, error: 'The upload could not be processed.' });
 });
 
 app.get('*', (req, res) => {

@@ -20,7 +20,7 @@ import requests
 from PIL import Image
 
 # Gemini API Configuration
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyB1knI-KMQdmkEiTM3gR0SipyUNuJKYZNg")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
 
 # Standard multimodal-capable Gemini models
 CANDIDATE_MODELS = [
@@ -287,7 +287,7 @@ def main():
         sys.stdout.reconfigure(encoding='utf-8')
 
     if not GEMINI_API_KEY:
-        print("Error: GEMINI_API_KEY environment variable is not set.")
+        print("Error: GEMINI_API_KEY environment variable is not set. Add it to .env before uploading images.")
         sys.exit(1)
 
     print(f"1. Scanning and encoding images from '{PHOTOS_DIR}'...")
