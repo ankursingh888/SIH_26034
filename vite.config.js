@@ -8,9 +8,18 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     proxy: {
-      '/upload-photos': 'http://localhost:3001',
-      '/submit-inspection': 'http://localhost:3001',
-      '/health': 'http://localhost:3001',
+      '/upload-photos': {
+        target: 'http://127.0.0.1:3001',
+        changeOrigin: true,
+      },
+      '/submit-inspection': {
+        target: 'http://127.0.0.1:3001',
+        changeOrigin: true,
+      },
+      '/health': {
+        target: 'http://127.0.0.1:3001',
+        changeOrigin: true,
+      },
     },
   },
   preview: {

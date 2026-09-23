@@ -152,8 +152,22 @@ function Dashboard({ onNavigate }) {
         const formData = new FormData();
         selectedFiles.forEach((file) => formData.append('photos', file));
 
-        const response = await fetch('/upload-photos', { method: 'POST', body: formData });
-        const payload = await response.json();
+        let response;
+        try {
+          response = await fetch('/upload-photos', { method: 'POST', body: formData });
+        } catch {
+          throw new Error(
+            'Cannot connect to the upload service. Start the app with "npm run dev" and try again.',
+          );
+        }
+
+        let payload;
+        try {
+          payload = await response.json();
+        } catch {
+          throw new Error('The upload service returned an invalid response. Check the backend logs.');
+        }
+
         if (!response.ok) throw new Error(payload.error || 'Photo upload failed');
 
         setFields(fieldsFromAnalysis(payload.analysis));
