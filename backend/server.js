@@ -13,9 +13,11 @@ const app = express();
 const port = process.env.PORT || 3001;
 const photosDir = path.join(__dirname, 'photos');
 const outputFile = path.join(__dirname, 'structured_output.json');
+const distDir = path.join(projectRoot, 'dist');
 const pythonCommand = process.platform === 'win32'
   ? path.join(__dirname, 'final_env', 'Scripts', 'python.exe')
   : path.join(__dirname, 'final_env', 'bin', 'python');
+
 const upload = multer({
   storage: multer.diskStorage({
     destination: photosDir,
@@ -28,6 +30,15 @@ const upload = multer({
     callback(null, file.mimetype.startsWith('image/'));
   }
 });
+
+async function hasBuiltAssets() {
+  try {
+    await fs.access(distDir);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 function runAnalyzer() {
   return new Promise((resolve, reject) => {
@@ -54,12 +65,31 @@ function runAnalyzer() {
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(projectRoot));
 
-app.get('/', (req, res) => res.sendFile(path.join(projectRoot, 'index.html')));
-app.get('/dashboard', (req, res) => res.sendFile(path.join(projectRoot, 'dashboard.html')));
-app.get('/report', (req, res) => res.sendFile(path.join(projectRoot, 'report.html')));
-app.get('/repository', (req, res) => res.sendFile(path.join(projectRoot, 'repository.html')));
+const useDist = await hasBuiltAssets();
+if (useDist) {
+  app.use(express.static(distDir));
+}
+
+app.get('/health', (_req, res) => res.json({ ok: true }));
+app.get('/dashboard', (_req, res) => {
+  if (useDist) {
+    return res.sendFile(path.join(distDir, 'index.html'));
+  }
+  return res.sendFile(path.join(projectRoot, 'index.html'));
+});
+app.get('/report', (_req, res) => {
+  if (useDist) {
+    return res.sendFile(path.join(distDir, 'index.html'));
+  }
+  return res.sendFile(path.join(projectRoot, 'index.html'));
+});
+app.get('/repository', (_req, res) => {
+  if (useDist) {
+    return res.sendFile(path.join(distDir, 'index.html'));
+  }
+  return res.sendFile(path.join(projectRoot, 'index.html'));
+});
 
 app.post('/login', (req, res) => {
   res.redirect(req.body.role === 'inspector' ? '/dashboard' : '/');
@@ -77,7 +107,6 @@ app.post('/upload-photos', upload.array('photos', 10), async (req, res) => {
   try {
     const analysis = await runAnalyzer();
 
-    // Automatically cleanup uploaded photos after processing
     await Promise.all(req.files.map(file => fs.unlink(file.path).catch(() => { })));
 
     res.json({ ok: true, files: req.files.map(file => file.filename), analysis });
@@ -87,6 +116,10 @@ app.post('/upload-photos', upload.array('photos', 10), async (req, res) => {
   }
 });
 
+app.get('*', (req, res) => {
+  const indexFile = useDist ? path.join(distDir, 'index.html') : path.join(projectRoot, 'index.html');
+  res.sendFile(indexFile);
+});
 
 app.listen(port, () => {
   console.log(`Simpler server is running on http://localhost:${port}`);
